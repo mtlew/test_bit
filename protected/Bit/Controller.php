@@ -39,12 +39,10 @@ class Controller extends Base\Controller
             // в общем как-то так...
             /** @var int $serviceId */
             $serviceId = 666;
+            $amount = (int)$_POST['amount'];
 
-            $userBalanceChange = new UserBalanceChange(Application::$user->getId());
-            $balanceNew = $userBalanceChange->balanceWithdraw((int)$_POST['amount'], $serviceId);
-
-            //Application::initUser(); // TODO рефакторинг
-            Application::$user->setBalance($balanceNew); // согласен насчёт запроса, да. так и хотел сначала, просто тоже как-то убого, вот и психанул )
+            $userService = new UserService();
+            $userService->balanceWithdraw($amount, $serviceId);
         }
         $data['user'] = Application::$user;
 
