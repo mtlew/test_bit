@@ -31,10 +31,20 @@ class Controller extends Base\Controller
 
         if (! empty($_POST['amount']) && (int)$_POST['amount'] > 0) {
 
-            $userBalanceChange = new UserBalanceChange(Application::$user->getId());
-            $userBalanceChange->balanceWithdraw((int)$_POST['amount'], 7);
+            // TODO наверное, нужно было не делать вообще, либо доделать
+            // мысль была такая, что типа радиобаттон сделать на странице вывода бабла, КУДА выводить,
+            // чтоб передавался ещё $_POST['serviceId']
+            // так-то просто цифре само собой тут не место
+            // надо либо из БД из таблицы сервисов брать, либо с константами класса сравнивать типа Service::SERVICE_TYPE_SBERBANK
+            // в общем как-то так...
+            /** @var int $serviceId */
+            $serviceId = 666;
 
-            Application::initUser(); // TODO рефакторинг
+            $userBalanceChange = new UserBalanceChange(Application::$user->getId());
+            $balanceNew = $userBalanceChange->balanceWithdraw((int)$_POST['amount'], $serviceId);
+
+            //Application::initUser(); // TODO рефакторинг
+            Application::$user->setBalance($balanceNew); // согласен насчёт запроса, да. так и хотел сначала, просто тоже как-то убого, вот и психанул )
         }
         $data['user'] = Application::$user;
 
@@ -50,15 +60,22 @@ class Controller extends Base\Controller
             'passwordHash' => password_hash('e@e.ee', PASSWORD_DEFAULT),
         ];
 
-        if (empty($_POST) || empty($_POST['email']) || empty($_POST['password']) || sizeof($_POST['email']) > 320) {
-            $data['error'] = 'Неверные данные';
-            return $this->render('auth', $data);
+        if (empty($_POST)) {
+            $this->render('auth', $data);
+            return; // это выход из функции такой, чтобы не городить кучу вложенных if'ов
+        }
+
+        if (empty($_POST['email']) || empty($_POST['password']) || sizeof($_POST['email']) > 320) {
+            $data['error'] = 'Поля заполнены неверно';
+            $this->render('auth', $data);
+            return;
         }
 
         $userService = new UserService();
         if (! $user = $userService->getByEmailPassword($_POST['email'], $_POST['password'])) {
-            $data['error'] = 'Неверные данные';
-            return $this->render('auth', $data);
+            $data['error'] = 'Неверный пароль';
+            $this->render('auth', $data);
+            return;
         }
 
         session_start();

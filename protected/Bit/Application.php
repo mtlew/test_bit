@@ -43,7 +43,7 @@ class Application
         DB\DB::connect(self::$config['DB']);
     }
 
-    public static function initUser()
+    protected function initUser()
     {
         if (empty(self::$session['userId'])) {
             return;

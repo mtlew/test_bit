@@ -14,16 +14,20 @@ use Bit\DB\DB;
 class UserBalanceChange
 {
 
+    /** @var int */
     protected $userId;
 
 
+    /**
+     * @param int $userId
+     */
     public function __construct(int $userId)
     {
         $this->userId = $userId;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     protected function getUserId()
     {
@@ -31,6 +35,11 @@ class UserBalanceChange
     }
 
 
+    /**
+     * @param int $amount Сумма в копейках, на которую уменьшится баланс пользователя
+     * @param int $serviceId ID сервиса, в пользу которого списывается сумма
+     * @return int|false
+     */
     public function balanceWithdraw(int $amount, int $serviceId)
     {
         $datetime = date('Y-m-d H:i:s');
@@ -39,7 +48,7 @@ class UserBalanceChange
         DB::query('BEGIN');
 
         $queryText = 'SELECT `balance` FROM `user` WHERE `id` = ' . (int)$this->getUserId() . ' FOR UPDATE';
-        $balance = DB::parse($queryText, true, 'balance');
+        $balance = (int)DB::parse($queryText, true, 'balance');
 
         try {
             if ($balance >= $amount) {
@@ -61,13 +70,9 @@ class UserBalanceChange
         }
         DB::query('COMMIT');
 
-        return true;
-    }
+        // новый баланс для обновления юзера
+        $balanceNew = $balance - $amount;
 
-
-    public function balanceDeposit($amount)
-    {
-        //
-        return false;
+        return $balanceNew;
     }
 }

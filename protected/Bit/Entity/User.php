@@ -20,7 +20,7 @@ class User extends BaseEntity
 
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getId()
     {
@@ -28,7 +28,7 @@ class User extends BaseEntity
     }
 
     /**
-     * @param mixed $id
+     * @param int $id
      */
     public function setId($id)
     {
@@ -36,7 +36,7 @@ class User extends BaseEntity
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getEmail()
     {
@@ -44,7 +44,7 @@ class User extends BaseEntity
     }
 
     /**
-     * @param mixed $email
+     * @param string $email
      */
     public function setEmail($email)
     {
@@ -52,7 +52,7 @@ class User extends BaseEntity
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getPasswordHash()
     {
@@ -60,7 +60,7 @@ class User extends BaseEntity
     }
 
     /**
-     * @param mixed $passwordHash
+     * @param string $passwordHash
      */
     public function setPasswordHash($passwordHash)
     {
@@ -68,7 +68,7 @@ class User extends BaseEntity
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getBalance()
     {
@@ -76,7 +76,7 @@ class User extends BaseEntity
     }
 
     /**
-     * @param mixed $balance
+     * @param int $balance
      */
     public function setBalance($balance)
     {
@@ -84,7 +84,7 @@ class User extends BaseEntity
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getBalanceUpdateDatetime()
     {
@@ -92,7 +92,7 @@ class User extends BaseEntity
     }
 
     /**
-     * @param mixed $balanceUpdateDatetime
+     * @param string $balanceUpdateDatetime
      */
     public function setBalanceUpdateDatetime($balanceUpdateDatetime)
     {
