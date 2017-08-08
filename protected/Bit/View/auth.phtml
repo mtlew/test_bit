@@ -1,0 +1,32 @@
+<h2>Авторизация</h2>
+
+<? if (! empty($error)) { ?>
+    <div style="color: red;"><?= $error ?></div>
+    <div>&nbsp;</div>
+<? } ?>
+
+<form method="post">
+    <table>
+        <tr>
+            <td>Логин:</td>
+            <td><input type="text" name="email" value="" /></td>
+        </tr>
+        <tr>
+            <td>Пароль:</td>
+            <td><input type="text" name="password" value="" /></td>
+        </tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <button type="submit">Войти</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+Доступ:
+<?= $email ?> (логин),
+<?= $password ?> (пароль),
+<?= $passwordHash ?> (хэш)

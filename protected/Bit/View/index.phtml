@@ -1,0 +1,24 @@
+<h2>Личный кабинет</h2>
+
+<h3>Вывод средств</h3>
+
+<form method="post">
+    <table>
+        <tr>
+            <td>Баланс (коп.):</td>
+            <td><?= $user->getBalance() ?></td>
+        </tr>
+        <tr>
+            <td>Вывод, сумма (коп.):</td>
+            <td><input type="text" name="amount" value="0" /></td>
+        </tr>
+        <tr>
+            <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center">
+                <button type="submit">Вывести</button>
+            </td>
+        </tr>
+    </table>
+</form>
