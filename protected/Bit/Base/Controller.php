@@ -16,13 +16,19 @@ abstract class Controller
     protected $params;
     protected $layout;
 
-
+    /**
+     * Controller constructor.
+     * @param array $params
+     */
     public function __construct($params)
     {
         $this->params = $params;
     }
 
-
+    /**
+     * @param string $actionName
+     * @return mixed
+     */
     public function runAction($actionName)
     {
         $actionName = 'action' . ucfirst($actionName);
@@ -33,32 +39,48 @@ abstract class Controller
         return $this->actionIndex(); // TODO 404
     }
 
-
+    /**
+     * @param $uri string
+     */
     public function redirect($uri)
     {
         header('Location: ' . $uri);
         die;
     }
 
-
+    /**
+     * @param string $fileName
+     * @param null|array $data
+     */
     protected function renderPartial($fileName, $data = null)
     {
         $this->renderFile($fileName, $data);
     }
 
-
+    /**
+     * @param string $fileName
+     * @param null|array $data
+     */
     protected function render($fileName, $data = null)
     {
         $content = $this->renderFile($fileName, $data, true);
         $this->renderLayout($content);
     }
 
+    /**
+     * @param string $content
+     */
     protected function renderLayout($content)
     {
         $this->renderFile($this->getLayout(), ['content' => $content]);
     }
 
-
+    /**
+     * @param string $fileName
+     * @param null|array $data
+     * @param bool $return
+     * @return string
+     */
     protected function renderFile($filName, $data = null, $return = false)
     {
         if (is_array($data)) {
@@ -75,20 +97,25 @@ abstract class Controller
         require $filName;
     }
 
-
+    /**
+     * @param string $fileName
+     * @return string
+     */
     protected function getFileNameFull($fileName)
     {
         return $this->getFilePath() . $fileName . '.phtml';
     }
 
-
+    /**
+     * @return string
+     */
     protected function getFilePath()
     {
         return dirname(__FILE__) . '/../View/';
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     protected function getLayout()
     {
@@ -96,7 +123,7 @@ abstract class Controller
     }
 
     /**
-     * @param mixed $layout
+     * @param string $layout
      */
     protected function setLayout($layout)
     {

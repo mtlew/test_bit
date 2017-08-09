@@ -11,6 +11,9 @@ namespace Bit\Entity;
 
 abstract class BaseEntity
 {
+    /**
+     * @param array $data
+     */
     public function loadData($data)
     {
         foreach ($data as $key => $value) {
