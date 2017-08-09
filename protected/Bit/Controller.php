@@ -42,7 +42,7 @@ class Controller extends Base\Controller
             $amount = (int)$_POST['amount'];
 
             $userService = new UserService();
-            $userService->balanceWithdraw($amount, $serviceId);
+            $userService->balanceWithdrawCurrentUser($amount, $serviceId);
         }
         $data['user'] = Application::$user;
 

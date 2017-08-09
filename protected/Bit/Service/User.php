@@ -62,20 +62,21 @@ class User
         return $user;
     }
 
-
     /**
+     * Списание средств пользователя
+     * @param int $userId ID пользователя
      * @param int $amount Сумма в копейках, на которую уменьшится баланс пользователя
      * @param int $serviceId ID сервиса, в пользу которого списывается сумма
-     * @return bool
+     * @return int|false
      */
-    public function balanceWithdraw(int $amount, int $serviceId)
+    public function balanceWithdraw(int $userId, int $amount, int $serviceId)
     {
         $datetime = date('Y-m-d H:i:s');
 
 
         DB::query('BEGIN');
 
-        $queryText = 'SELECT `balance` FROM `user` WHERE `id` = ' . $this->getCurrentUserId() . ' FOR UPDATE';
+        $queryText = 'SELECT `balance` FROM `user` WHERE `id` = ' . $userId . ' FOR UPDATE';
         $balance = (int)DB::parse($queryText, true, 'balance');
 
         try {
@@ -84,11 +85,11 @@ class User
                 $queryText = 'UPDATE `user` 
                               SET `balance` = `balance` - ' . $amount . ', 
                                   `balanceUpdateDatetime` = "' . $datetime . '"
-                              WHERE `id` = ' . $this->getCurrentUserId();
+                              WHERE `id` = ' . $userId;
                 DB::query($queryText);
 
                 $queryText = 'INSERT INTO `userBalanceChange` (`userId`, `amount`, `datetime`, `serviceId`, `executed`) 
-                              VALUES (' . $this->getCurrentUserId() . ', -' . $amount . ', "' . $datetime . '", ' . (int)$serviceId . ', 0)';
+                              VALUES (' . $userId . ', -' . $amount . ', "' . $datetime . '", ' . (int)$serviceId . ', 0)';
                 DB::query($queryText);
             }
         }
@@ -98,10 +99,35 @@ class User
         }
         DB::query('COMMIT');
 
-        // новый баланс для обновления юзера
-        $this->setCurrentUserBalance($balance - $amount);
+        // новый баланс
+        $balanceNew = $balance - $amount;
 
-        return true;
+        return $balanceNew;
+    }
+
+    /**
+     * Списание средств текущего авторизованного пользователя
+     * @param int $amount
+     * @param int $serviceId
+     * @return false|int
+     */
+    public function balanceWithdrawCurrentUser(int $amount, int $serviceId)
+    {
+        // id текущего авторизованного пользователя
+        $userId = $this->getCurrentUserId();
+
+        if (! $userId) {
+            return false;
+        }
+
+        // списание средств
+        $balanceNew = $this->balanceWithdraw($userId, $amount, $serviceId);
+
+        // новый баланс для обновления юзера
+        if ($balanceNew !== false) {
+            $this->setCurrentUserBalance($balanceNew);
+        }
+        return $balanceNew;
     }
 
     /**
